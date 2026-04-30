@@ -4,7 +4,7 @@ namespace App\Models\View;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CongNoHocPhiSinhVien extends Model
+class VCongNoHocPhiSinhVien extends Model
 {
     protected $table = 'v_cong_no_hoc_phi_sinhvien';
     public $timestamps = false;
