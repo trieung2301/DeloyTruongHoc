@@ -24,16 +24,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 5. Thiết lập Working Directory
 WORKDIR /var/www/html
 
-# 6. Copy file cấu hình và cài đặt vendor (Tối ưu Cache)
+# 1. Chỉ copy file cấu hình vào trước để build môi trường sạch
 COPY composer.json composer.lock* ./
-RUN composer install --no-interaction --no-dev --no-scripts --no-autoloader
 
-# 7. Copy toàn bộ code Backend
+# 2. Cài đặt (Không dùng --no-autoloader ở bước này để test)
+# Thêm --ignore-platform-reqs để tránh lỗi thiếu extension phụ
+RUN composer install --no-interaction --no-dev --no-scripts --ignore-platform-reqs
+
+# 3. Sau đó mới copy toàn bộ code còn lại
 COPY . .
 
-# 8. Chạy dump-autoload và tối ưu hóa Class Map
+# 4. Tối ưu hóa lại
 RUN composer dump-autoload --optimize --no-scripts
-
-# 9. PHÂN QUYỀN (Quan trọng để không bị lỗi 500)
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
