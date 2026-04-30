@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dieukienmonhoc', function (Blueprint $table) {
-            $table->tinyInteger('Loai')->default(1)->comment('1: Tien quyet, 2: Song hanh')->after('MonTienQuyetID');
+        Schema::create('nganhdaotao', function (Blueprint $table) {
+            $table->integer('NganhID', true);
+            $table->string('MaNganh', 20)->unique('manganh');
+            $table->string('TenNganh', 100);
+            $table->integer('KhoaID')->index('khoaid');
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('dieukienmonhoc', function (Blueprint $table) {
-            $table->dropColumn('Loai');
-        });
+        Schema::dropIfExists('nganhdaotao');
     }
 };
